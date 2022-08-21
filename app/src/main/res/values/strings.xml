@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Notes app</string>
+
+    <string name="gfg">NOTES</string>
+    <string name="addNote">Add note</string>
+    <string name="save">save</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
