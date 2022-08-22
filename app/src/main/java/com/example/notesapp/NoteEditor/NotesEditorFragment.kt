@@ -3,25 +3,19 @@ package com.example.notesapp.NoteEditor
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.notesapp.NoteList.NoteListFragment
-import com.example.notesapp.NoteList.NoteListFragmentDirections
 import com.example.notesapp.R
 import com.example.notesapp.databinding.FragmentNotesEditorBinding
 import kotlin.properties.Delegates
 
 class NotesEditorFragment : Fragment() {
     private lateinit var editText: EditText
-    var noteId by Delegates.notNull<Int>()
+    private var noteId by Delegates.notNull<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,42 +37,12 @@ class NotesEditorFragment : Fragment() {
             noteId = NoteListFragment.notes.size - 1
             NoteListFragment.arrayAdapter.notifyDataSetChanged()
         }
-
-        editText.addTextChangedListener {
-            object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    NoteListFragment.notes[noteId] = charSequence.toString()
-                    Log.i(
-                        "Hello once more",
-                        charSequence.toString() + "hello" + NoteListFragment.notes
-                    )
-                    NoteListFragment.arrayAdapter.notifyDataSetChanged()
-
-                    //Create SharedPreferences to store the notes
-                    val prefs: SharedPreferences? = activity?.applicationContext
-                        ?.getSharedPreferences("com.example.notesapp", Context.MODE_PRIVATE)
-
-                    val set: HashSet<String> = HashSet(NoteListFragment.notes)
-                    prefs?.edit()?.putStringSet("notes", set)?.apply()
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                }
-            }
-        }
         setHasOptionsMenu(true)
         return binding.root
     }
 
-    fun save() {
+    private fun save() {
         NoteListFragment.notes[noteId] = editText.text.toString()
-        Log.i(
-            "Hello once more",
-            editText.text.toString() + "hello" + NoteListFragment.notes
-        )
         NoteListFragment.arrayAdapter.notifyDataSetChanged()
 
         //Create SharedPreferences to store the notes

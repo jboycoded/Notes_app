@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.ArrayAdapter
@@ -38,29 +37,21 @@ class NoteListFragment : Fragment() {
             ?.getSharedPreferences("com.example.notesapp", Context.MODE_PRIVATE)
 
         val empty = HashSet<String>(listOf("empty"))
-        Log.i("HELLO THERE AGAIN", prefs.toString() + " " + empty.toString())
-        Log.i("HELLO THERE AGAIN", prefs?.getStringSet("notes", empty).toString())
-
         var set: HashSet<String> = prefs?.getStringSet("notes", empty) as HashSet<String>
 
         /*  If there is a "key" named "notes", it will not be null, therefore the else statement
          *  will execute, creating a new ArrayList with values from the set variable
          *  If it is the opposite, that is, it is null, add a new entry to notes variable
          *  In this case, it will be the only entry to the variable
-         *  TODO: Remove the log statement after testing
          */
         if (set == empty) {
             notes.add("Example note")
-            Log.i("HELLO THERE", notes.toString())
         } else {
             notes = ArrayList(set)
-            Log.i("HELLO THERE", notes.toString())
         }
 
-        // Using custom listView provided by Android Studio
-        // TODO: Remember to create a Custom layout for the ArrayAdapter
         arrayAdapter =
-            context?.let { ArrayAdapter(it, android.R.layout.simple_list_item_1, notes) }!!
+            context?.let { ArrayAdapter(it, R.layout.adapter_layout, R.id.text1, notes) }!!
         listView.adapter = arrayAdapter
 
         listView.setOnItemClickListener { _, _, position, _ ->
@@ -82,7 +73,6 @@ class NoteListFragment : Fragment() {
                 .setPositiveButton("Yes") { _, _ ->
                     notes.removeAt(position)
                     arrayAdapter.notifyDataSetChanged()
-                    Log.i("HELLO THERE 2", notes.toString())
                     set = HashSet(notes)
                     prefs.edit().putStringSet("notes", set).apply()
                 }
@@ -94,14 +84,15 @@ class NoteListFragment : Fragment() {
         return binding.root
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu, menu)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            //TODO: Remember to Use safeargs to go to NotesEditorFragment
             R.id.add_note -> {
                 findNavController().navigate(
                     NoteListFragmentDirections.actionNoteListFragmentToNotesEditorFragment(
